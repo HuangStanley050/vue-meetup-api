@@ -16,8 +16,8 @@ export default {
     try {
       login_result = await axios.post(login_end_point, data);
     } catch (err) {
-      console.log(err.response);
-      const error = new Error("Unable to login");
+      console.log(err.response.data.error.message);
+      const error = new Error(err.response.data.error.message);
       error.statusCode = 401;
       return next(error);
     }
@@ -37,8 +37,8 @@ export default {
     try {
       register_result = await axios.post(register_end_point, data);
     } catch (err) {
-      console.log(err.response);
-      const error = new Error("Unable to register user");
+      console.log(err.response.data.error.message);
+      const error = new Error(err.response.data.error.message);
       error.statusCode = 500;
       return next(error);
     }
