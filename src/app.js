@@ -4,20 +4,25 @@ import * as admin from "firebase-admin";
 import cors from "cors";
 import authRouter from "./routes/auth";
 import serviceAccount from "./pwagram-bd625-firebase-adminsdk-ew3ye-c8e2c861ac.json";
-// const indexRouter = require('./routes/index');
-// const usersRouter = require('./routes/users');
+
+import storeRouter from "./routes/store";
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+const auth = admin.auth();
+const db = admin.firestore();
 
 const app = express();
-
+app.set("auth", auth);
+app.set("db", db);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use("/api/auth", authRouter);
+app.use("/api/store", storeRouter);
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
