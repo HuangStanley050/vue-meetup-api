@@ -29,7 +29,7 @@ export default {
     //console.log(meetup);
     try {
       result = await db.collection("meetings").add(meetupData);
-      console.log(result);
+      //console.log(result);
     } catch (err) {
       console.log(err.response);
     }
