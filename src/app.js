@@ -8,14 +8,17 @@ import serviceAccount from "./pwagram-bd625-firebase-adminsdk-ew3ye-c8e2c861ac.j
 import storeRouter from "./routes/store";
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "gs://pwagram-bd625.appspot.com/"
 });
 const auth = admin.auth();
 const db = admin.firestore();
+const bucket = admin.storage().bucket();
 
 const app = express();
 app.set("auth", auth);
 app.set("db", db);
+app.set("bucket", bucket);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

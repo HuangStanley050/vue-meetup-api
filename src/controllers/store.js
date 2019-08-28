@@ -1,4 +1,20 @@
 export default {
+  storeImage: async (req, res, next) => {
+    const bucket = req.app.get("bucket");
+    const options = {
+      version: "v2", // defaults to 'v2' if missing.
+      action: "read",
+      expires: Date.now() + 1000 * 60 * 60 // one hour
+    };
+    if (!req.file) {
+      //console.log(req);
+      const error = new Error("no file attached");
+      error.statusCode = 400;
+      return next(error);
+    }
+    console.log(req.file);
+    res.json({ message: "storeImage route" });
+  },
   fetchMeetings: async (req, res, next) => {
     const db = req.app.get("db");
     const meetingRef = db.collection("meetings");
