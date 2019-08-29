@@ -12,8 +12,26 @@ export default {
       error.statusCode = 400;
       return next(error);
     }
-    console.log(req.file);
-    res.json({ message: "storeImage route" });
+    //console.log(req.file);
+
+    const blob = bucket.file(req.file.originalname);
+    const meetupId = req.file;
+    console.log(meetupId);
+    const blobStream = blob.createWriteStream();
+
+    blobStream.on("error", err => {
+      console.log(err.response);
+      next(err);
+    });
+
+    blobStream.on("finish", () => {
+      // The public URL can be used to directly access the file via HTTP.
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      console.log(publicUrl);
+      res.json({ message: "storeImage route" });
+    });
+
+    blobStream.end(req.file.buffer);
   },
   fetchMeetings: async (req, res, next) => {
     const db = req.app.get("db");
