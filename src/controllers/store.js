@@ -1,6 +1,9 @@
 export default {
   storeImage: async (req, res, next) => {
     const bucket = req.app.get("bucket");
+    const db = req.app.get("db");
+    //const meetingRef = db.collection("meets");
+
     const options = {
       version: "v2", // defaults to 'v2' if missing.
       action: "read",
@@ -15,8 +18,8 @@ export default {
     //console.log(req.file);
 
     const blob = bucket.file(req.file.originalname);
-    const meetupId = req.file;
-    console.log(meetupId);
+    // const meetupId = req.file;
+    // console.log(meetupId);
     const blobStream = blob.createWriteStream();
 
     blobStream.on("error", err => {
@@ -24,10 +27,18 @@ export default {
       next(err);
     });
 
-    blobStream.on("finish", () => {
+    blobStream.on("finish", async () => {
       // The public URL can be used to directly access the file via HTTP.
       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-      console.log(publicUrl);
+      //update the firestore with thie public url as imageUrl in the document field
+
+      //db.collection('books').doc('fK3ddutEpD2qQqRMXNW5').get()
+      let document = await db.collection("meetings").doc(blob.name);
+      await document.update({ imageUrl: publicUrl });
+      //console.log(document);
+
+      let query = await document.get();
+      console.log(query.data()); //getting the data back after the imageUrl is update, can then send back to client
       res.json({ message: "storeImage route" });
     });
 
