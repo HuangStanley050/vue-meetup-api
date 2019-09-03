@@ -38,8 +38,8 @@ export default {
       //console.log(document);
 
       let query = await document.get();
-      console.log(query.data()); //getting the data back after the imageUrl is update, can then send back to client
-      res.json({ message: "storeImage route" });
+      let response = query.data(); //getting the data back after the imageUrl is update, can then send back to client
+      res.json({ message: "image stored successfully!", data: response });
     });
 
     blobStream.end(req.file.buffer);
