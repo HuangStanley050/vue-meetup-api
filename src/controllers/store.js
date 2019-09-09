@@ -1,4 +1,9 @@
 export default {
+  updateMeeting: async (req, res, next) => {
+    console.log("update object", req.body);
+    console.log("meeting id", req.params.id);
+    res.json({ msg: "Update meeting route" });
+  },
   storeImage: async (req, res, next) => {
     const bucket = req.app.get("bucket");
     const db = req.app.get("db");
@@ -32,10 +37,8 @@ export default {
       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
       //update the firestore with thie public url as imageUrl in the document field
 
-      //db.collection('books').doc('fK3ddutEpD2qQqRMXNW5').get()
       let document = await db.collection("meetings").doc(blob.name);
       await document.update({ imageUrl: publicUrl });
-      //console.log(document);
 
       let query = await document.get();
       let response = query.data(); //getting the data back after the imageUrl is update, can then send back to client

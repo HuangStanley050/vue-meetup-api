@@ -13,6 +13,11 @@ const multer = Multer({
 
 router
   .post("/meeting", Middleware.checkAuth, storeController.storeMeeting)
+  .patch(
+    "/updateMeeting/:id",
+    Middleware.checkAuth,
+    storeController.updateMeeting
+  )
   .post(
     "/image",
     Middleware.checkAuth,
