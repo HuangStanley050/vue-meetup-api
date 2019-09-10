@@ -1,8 +1,21 @@
 export default {
   updateMeeting: async (req, res, next) => {
-    console.log("update object", req.body);
-    console.log("meeting id", req.params.id);
-    res.json({ msg: "Update meeting route" });
+    const db = req.app.get("db");
+    const meetupId = req.params.id;
+    const updateObj = req.body;
+    const meetingRef = db.collection("meetings");
+    let queryResult;
+
+    try {
+      queryResult = await meetingRef.doc(meetupId).update(updateObj);
+
+      res.json({ msg: "Update meeting success" });
+      //console.log(queryResult);
+    } catch (err) {
+      const error = new Error("unable to update database");
+      error.statusCode = 500;
+      return next(error);
+    }
   },
   storeImage: async (req, res, next) => {
     const bucket = req.app.get("bucket");
@@ -79,7 +92,9 @@ export default {
       result = await db.collection("meetings").add(meetupData);
       //console.log(result);
     } catch (err) {
-      console.log(err.response);
+      const error = new Error("Unable to store meeting");
+      error.statusCode = 500;
+      return next(error);
     }
     //console.log(db)
     res.json({ message: "store meeting route", data: result });
