@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import express from "express";
 import logger from "morgan";
 import * as admin from "firebase-admin";
