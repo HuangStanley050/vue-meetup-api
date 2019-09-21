@@ -1,4 +1,22 @@
 export default {
+  unregisterMeetup: async (req, res, next) => {
+    const db = req.app.get("db");
+    const registrationId = req.body.registrationKey;
+    let result;
+    //console.log("registration key: ", registrationId);
+    try {
+      result = await db
+        .collection("registeredMeetup")
+        .doc(registrationId)
+        .delete();
+    } catch (err) {
+      const error = new Error("Unable to unregister meeting");
+      error.statusCode = 500;
+      return next(error);
+    }
+    //console.log(result);
+    res.json({ msg: "unregistered" });
+  },
   registerMeeting: async (req, res, next) => {
     const db = req.app.get("db");
     const meetupId = req.body.meetupId;

@@ -14,6 +14,7 @@ const multer = Multer({
 router
   .post("/meeting", Middleware.checkAuth, storeController.storeMeeting)
   .post("/register", Middleware.checkAuth, storeController.registerMeeting)
+  .delete("/unregister", Middleware.checkAuth, storeController.unregisterMeetup)
   .patch(
     "/updateMeeting/:id",
     Middleware.checkAuth,
