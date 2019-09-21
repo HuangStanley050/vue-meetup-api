@@ -1,5 +1,27 @@
 export default {
-  registerMeeting: async (req, res, next) => {},
+  registerMeeting: async (req, res, next) => {
+    const db = req.app.get("db");
+    const meetupId = req.body.meetupId;
+    const userId = req.body.userId;
+    let result;
+    let registrationId;
+    let registerMeetup = {
+      userId,
+      meetupId
+    };
+
+    try {
+      result = await db.collection("registeredMeetup").add(registerMeetup);
+    } catch (err) {
+      const error = new Error("Unable to register meeting");
+      //console.log(err.message);
+      error.statusCode = 500;
+      return next(error);
+    }
+
+    registrationId = result._path.segments[1];
+    res.json({ msg: "registration successful!", data: { registrationId } });
+  },
   updateMeeting: async (req, res, next) => {
     const db = req.app.get("db");
     const meetupId = req.params.id;
