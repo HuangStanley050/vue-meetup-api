@@ -12,6 +12,7 @@ const multer = Multer({
 });
 
 router
+  .get("/fetchuserdata", Middleware.checkAuth, storeController.fetchUserData)
   .post("/meeting", Middleware.checkAuth, storeController.storeMeeting)
   .post("/register", Middleware.checkAuth, storeController.registerMeeting)
   .delete("/unregister", Middleware.checkAuth, storeController.unregisterMeetup)
