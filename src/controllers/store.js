@@ -4,7 +4,8 @@ export default {
     const userId = req.query.userId;
     const registeredMeetings = [];
     let queryResult;
-
+    let registeredMeetups = [];
+    let registrationKeys = {};
     try {
       queryResult = await db
         .collection("registeredMeetup")
@@ -12,15 +13,21 @@ export default {
         .get();
 
       for (let doc of queryResult.docs) {
-        registeredMeetings.push(doc.data());
+        registrationKeys[doc.data().meetupId] = doc.id;
+
+        registeredMeetings.push(doc.data().meetupId);
       }
     } catch (err) {
       const error = new Error("Unable to fetch registered meetings");
       error.statusCode = 500;
       return next(error);
     }
-
-    res.json({ msg: "fetched meetings", data: { registeredMeetings } });
+    // console.log(registeredMeetings);
+    // console.log(registrationKeys);
+    res.json({
+      msg: "fetched meetings",
+      data: { registeredMeetings, registrationKeys }
+    });
   },
   unregisterMeetup: async (req, res, next) => {
     const db = req.app.get("db");
